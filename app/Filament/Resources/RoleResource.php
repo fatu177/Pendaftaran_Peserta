@@ -5,8 +5,9 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\RoleResource\Pages;
 use App\Filament\Resources\RoleResource\RelationManagers;
 use App\Models\Role;
-use Filament\Actions\DeleteAction;
+
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -28,9 +29,13 @@ class RoleResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                ->minLength(2)
-                ->maxLength(255)
-                ->required()
+                    ->minLength(2)
+                    ->maxLength(255)
+                    ->required(),
+                Select::make('permissions')
+                    ->multiple()
+                    ->relationship('permissions', 'name')
+                    ->preload()
             ]);
     }
 
@@ -45,7 +50,7 @@ class RoleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                DeleteAction::make()
+                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
